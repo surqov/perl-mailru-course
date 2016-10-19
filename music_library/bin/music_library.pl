@@ -10,17 +10,19 @@ while (<STDIN>) {
 	push(@nos, [$_ =~ m/.\/(.*)\/(\d+)\s-\s(.*)\/(.*)\.(.*)$/]);
 	#				0      1      2       3       4
 	#             band - year - album - track - format
-}
-my ($band, $year, $album, $track, $format, $sort, $columns) = "";
-for (my $i = 0; $i < scalar @ARGV; $i++){
-	if ($ARGV[$i] =~ /--band/){$band = $ARGV[$i+1];}
-	if ($ARGV[$i] =~ /--year/){$year = $ARGV[$i+1];}
-	if ($ARGV[$i] =~ /--album/){$album = $ARGV[$i+1];}
-	if ($ARGV[$i] =~ /--track/){$track = $ARGV[$i+1];}
-	if ($ARGV[$i] =~ /--format/){$format = $ARGV[$i+1];}
-	if ($ARGV[$i] =~ /--sort/){$sort = $ARGV[$i+1];}
-	if ($ARGV[$i] =~ /--columns/){$columns = $ARGV[$i+1];}
-}
+	}
+		my ($band, $year, $album, $track, $format, $sort, $columns) = ""; #arguments;
+		my $scr = ""; #string for arguments;
+		for (my $i = 0; $i < scalar @ARGV; $i++){
+			$scr .= $ARGV[$i]." ";
+	}
+			if ($scr =~ /--band\s(.+?)($|(\s--))/) {print "LOL\n";$band = $1;}
+		    if ($scr =~ /--year\s(.+?)($|(\s--))/) {$year = $1;}
+			if ($scr =~ /--album\s(.+?)($|(\s--))/) {$album = $1;}
+			if ($scr =~ /--track\s(.+?)($|(\s--))/) {$track = $1;}
+			if ($scr =~ /--format\s(.+?)($|(\s--))/) {$format = $1;}
+			if ($scr =~ /--sort\s(.+?)($|(\s--))/) {$sort = $1;}
+			if ($scr =~ /--columns\s(.+?)($|(\s--))/) {$columns = $1};
 
 if ($sort =~ /band/){@pos = sort { $a->[0] cmp $b->[0] } @nos;}
 elsif ($sort =~ /year/){@pos = sort { 0+$a->[1] cmp 0+$b->[1] } @nos;} 
@@ -29,15 +31,35 @@ elsif ($sort =~ /track/){@pos = sort { $a->[3] cmp $b->[3] } @nos;}
 elsif ($sort =~ /format/){@pos = sort { $a->[4] cmp $b->[4] } @nos;} 
 else {@pos = @nos}
 
-@nos = @pos;
+@nos = [];
 
-for (my $i = 0; $i < scalar @pos; $i++){
-	for (my $b = 0; $b < 4; $b++){
+	sub row_filter($$){
+		my $f = shift;
+		my $string = shift;
 		
+		print $f."\n";
+		print $string." \n";
+		print $pos[2][$f];
+		printf($pos[2][$f] =~ /100/); #############################################################
+		for (my $i = 0; $i < scalar @pos; $i++){
+			if ( $pos[$i][$f] =~ $string ){
+					for (my $b = 0; $b < 4; $b++){
+						$nos[$i][$b] = $pos[$i][$b]; print $nos[$i][$b]."\n";				
+				}
+			}
+		}
 	}
-}
 
+if ($band){row_filter(0, $band)};
+if ($year){row_filter(1, $year)};
+if ($album){row_filter(2, $album)};
+if ($track){row_filter(3, $track)};
+if ($format){row_filter(4, $format)};
 
+#print Dumper(@pos);
+#print Dumper(@nos);
+
+=comment
 sub max_length($) {
 				my $a = shift;
 
@@ -82,4 +104,3 @@ my @los = @pos;
 		}
 
 print '\\'.normal_print.'/'."\n";
-
