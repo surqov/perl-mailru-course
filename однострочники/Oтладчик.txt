@@ -1,0 +1,13 @@
+l
+b 7 $i == 4
+c
+print $i
+print @F
+print @W
+w $b
+b 7 $i == 8
+print $b
+n
+o
+H -2
+q
