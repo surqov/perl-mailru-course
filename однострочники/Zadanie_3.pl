@@ -11,7 +11,7 @@
 # REQUIREMENTS: ---
 #         BUGS: ---
 #        NOTES: ---
-#       AUTHOR: surk0ff, 
+#       AUTHOR: surk0ff 
 # ORGANIZATION: 
 #      VERSION: 1.0
 #      CREATED: 20.10.2016 12:40:34
@@ -24,17 +24,10 @@ use utf8;
 use DDP;
 use Data::Dumper;
  
+my @F;
 while (<>) {
 	chomp $_;
-	my @F = split(';', $_, 0);
-	my $i = 0;
-	   while ($i < scalar @F) {
-	        $W[$b] = [$b, [@F]];
-	         ++$i;
-	   }
-	   ++$b;
-	 }
-	 {
-	  print Dumper(@W);
-	  p @W;
-	 }
+	push @F, [ split ";" ];
+}
+	print Dumper(@F);
+	p @F;
