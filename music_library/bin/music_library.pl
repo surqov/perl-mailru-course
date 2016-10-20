@@ -52,7 +52,7 @@ my @nos = [];
 				}
 			}
 		}
-	}
+@pos=@nos;	}
 
 if ($band){row_filter(0, $band)};
 if ($year){row_filter(1, $year)};
@@ -60,10 +60,8 @@ if ($album){row_filter(2, $album)};
 if ($track){row_filter(3, $track)};
 if ($format){row_filter(4, $format)};
 
-print Dumper(@pos);
-print Dumper(@nos);
-
-@pos = @nos;
+#print Dumper(@pos);
+#print Dumper(@nos);
 
 sub max_length($) {
 				my $a = shift;
