@@ -6,14 +6,16 @@ use 5.010;
 use Data::Dumper;
 
 #$| = 1;
-
+my $u;
 my (@nos, @pos) = [];
 while (<STDIN>) {
 	#my @pos = $_ =~ m{^\.\/(\w+\s+\w+\s+\w+)\/(\d+\s-\s\w+)};
-	push(@nos, [$_ =~ m/.\/(.*)\/(\d+)\s-\s(.*)\/(.*)\.(.*)$/]);
+	if ($_) {push(@nos, [$_ =~ m/.\/(.*)\/(\d+)\s-\s(.*)\/(.*)\.(.*)$/])};
 	#				0      1      2       3       4
 	#             band - year - album - track - format
+	$u++;
 	}
+if ($u == 1){die "";}
 		my ($band, $year, $album, $track, $format, $sort, $columns) = ""; #arguments;
 		my $scr = ""; #string for arguments;
 		for (my $i = 0; $i < scalar @ARGV; $i++){
@@ -39,13 +41,23 @@ my @los;
 sub row_filter($$){
 		my $f = shift;
 		my $string = shift;
-		for (my $i = 0; $i < scalar @pos; $i++){
-			if ( $string =~ $pos[$i][$f] ){
-				push(@los, $pos[$i]);				
+			if ($f == 1){
+				push (@los, []);
+				for (my $q = 0; $q < scalar @pos; $q++){
+							if ( $string == $pos[$q][$f] ){
+							push(@los, $pos[$q]);
+						}
+						}
+			}
+			else {
+			for (my $i = -1; $i < scalar @pos; $i++){
+				if ( $string =~ /$pos[$i][$f]/ ){
+					push(@los, $pos[$i]);				
 			}
 		}
-@pos=@los;	}
-
+	}
+@pos=@los;	
+}
 if ($band){row_filter(0, $band)};
 if ($year){row_filter(1, $year)};
 if ($album){row_filter(2, $album)};
@@ -80,6 +92,7 @@ print '/'.normal_print.'\\'."\n";
 my @gos = @pos;
 			for (my $g = 1; $g < scalar @pos; $g++){
 				for (my $stolb = 0; $stolb <=4; $stolb++){
+					if (length $pos[$g][$stolb] == 0){next}					
 					printf("|");
 					my $float = '%'.(max_length($stolb)+1).'s';
 					printf("$float", "$gos[$g][$stolb]");
