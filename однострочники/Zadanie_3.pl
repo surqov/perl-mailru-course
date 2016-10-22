@@ -27,7 +27,7 @@ use Data::Dumper;
 my @F;
 while (<>) {
 	chomp $_;
-	push @F, [ split ";" ];
+	push @F, [split ";"];
 }
 	print Dumper(@F);
 	p @F;

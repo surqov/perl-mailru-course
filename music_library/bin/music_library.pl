@@ -19,7 +19,7 @@ while (<STDIN>) {
 		for (my $i = 0; $i < scalar @ARGV; $i++){
 			$scr .= $ARGV[$i]." ";
 	}
-			if ($scr =~ /--band\s(.+?)($|(\s--))/) {print "LOL\n";$band = $1;}
+			if ($scr =~ /--band\s(.+?)($|(\s--))/) {$band = $1;}
 		    if ($scr =~ /--year\s(.+?)($|(\s--))/) {$year = $1;}
 			if ($scr =~ /--album\s(.+?)($|(\s--))/) {$album = $1;}
 			if ($scr =~ /--track\s(.+?)($|(\s--))/) {$track = $1;}
@@ -27,32 +27,24 @@ while (<STDIN>) {
 			if ($scr =~ /--sort\s(.+?)($|(\s--))/) {$sort = $1;}
 			if ($scr =~ /--columns\s(.+?)($|(\s--))/) {$columns = $1};
 
-if ($sort =~ /band/){@pos = sort { $a->[0] cmp $b->[0] } @nos;}
-elsif ($sort =~ /year/){@pos = sort { 0+$a->[1] cmp 0+$b->[1] } @nos;} 
-elsif ($sort =~ /album/){@pos = sort { $a->[2] cmp $b->[2] } @nos;} 
-elsif ($sort =~ /track/){@pos = sort { $a->[3] cmp $b->[3] } @nos;} 
-elsif ($sort =~ /format/){@pos = sort { $a->[4] cmp $b->[4] } @nos;} 
+if ((defined($sort)) && ($sort =~ /band/)){@pos = sort { $a->[0] cmp $b->[0] } @nos;}
+elsif ((defined($sort)) && ($sort =~ /year/)){@pos = sort { $a->[1] <=> $b->[1] } @nos;} 
+elsif ((defined($sort)) && ($sort =~ /album/)){@pos = sort { $a->[2] cmp $b->[2] } @nos;} 
+elsif ((defined($sort)) && ($sort =~ /track/)){@pos = sort { $a->[3] cmp $b->[3] } @nos;} 
+elsif ((defined($sort)) && ($sort =~ /format/)){@pos = sort { $a->[4] cmp $b->[4] } @nos;} 
 else {@pos = @nos}
 
-my @nos = [];
+my @los;
 
-	sub row_filter($$){
+sub row_filter($$){
 		my $f = shift;
 		my $string = shift;
-		
-		print $f."\n";
-		print $string." \n";
-		print $pos[0][$f]."\n";
-		printf($string =~ /$pos[0][$f]/);
-
 		for (my $i = 0; $i < scalar @pos; $i++){
 			if ( $string =~ $pos[$i][$f] ){
-					for (my $b = 0; $b <= 4; $b++){
-						$nos[$i][$b] = $pos[$i][$b]; print $nos[$i][$b]."\n";				
-				}
+				push(@los, $pos[$i]);				
 			}
 		}
-@pos=@nos;	}
+@pos=@los;	}
 
 if ($band){row_filter(0, $band)};
 if ($year){row_filter(1, $year)};
@@ -60,15 +52,13 @@ if ($album){row_filter(2, $album)};
 if ($track){row_filter(3, $track)};
 if ($format){row_filter(4, $format)};
 
-#print Dumper(@pos);
-#print Dumper(@nos);
-
+my $len = 0;
 sub max_length($) {
 				my $a = shift;
-				my $len = 1;
+			
 				my $length = 0;
 				for (my $i = 1; $i < scalar @pos; $i++){
-					$len = length $pos[$i][$a];
+										$len = length $pos[$i][$a];
 					if (($len) > ($length)) { $length = $len}
 				}
 				return $length;
@@ -87,12 +77,12 @@ sub normal_print(){
 
 print '/'.normal_print.'\\'."\n";
 
-my @los = @pos;
+my @gos = @pos;
 			for (my $g = 1; $g < scalar @pos; $g++){
 				for (my $stolb = 0; $stolb <=4; $stolb++){
 					printf("|");
 					my $float = '%'.(max_length($stolb)+1).'s';
-					printf("$float", "$los[$g][$stolb]");
+					printf("$float", "$gos[$g][$stolb]");
 					print " ";
 					}
 			print "|\n";
@@ -107,3 +97,7 @@ my @los = @pos;
 		}
 
 print '\\'.normal_print.'/'."\n";
+
+#print Dumper(@pos);
+#print Dumper(@nos);
+
