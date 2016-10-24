@@ -1,8 +1,9 @@
-package Local::MusicLibrary;
+package Local::MyLibrary;
 
 use strict;
 use warnings;
-
+use Local::MyLibrary::Parser;
+use Local::MyLibrary::Printer;
 =encoding utf8
 
 =head1 NAME

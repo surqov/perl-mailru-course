@@ -26,35 +26,44 @@ BEGIN{
 no warnings 'experimental';
 
 sub tokenize {
-	chomp(my $expr = shift);
-	my @res;
+				chomp(my $expr = shift);
 
-	#my @chunks = split //, $expr;
-	#my @chunks = split m{[-=]}, $expr;
-	my @chunks = split m{([- /+^*()])}, $expr;
-	my $i = 0;
-	for my $c (@chunks) {
-		$i++;
-		next if $c =~ /^\s*$/;
-		
-			given ($c) {
-				when (/^\s*$/){}
-
-				when (/\d/){ push(@res, 0+$c);}
-				when ( '.' ){ push(@res, 0+$c);}
-				#when (/\w/) {(die "Bad: '$_'";)}
-				when ([ '+', '-' ]){ 
-									if (($chunks[$i-2] == ' ') and ($chunks[$i] =~ /\d/)) {push (@res, 'U'.$c)}
-										else {
-												push (@res, $c);}
-									}
-					
-				default {
-					die "Bad: '$_'";
-				}	
-			}	
-		}
-	return \@res;
+	my @source = grep ( !m/^(\s*|)$/, split m{
+			            ( 
+							(?<!e) [+-]
+							|
+							[*()/^]
+							|
+							\s+
+						)
+			       }x, $expr );
+	my @result; #Конечный результат					
+	my ($skobka, $operator, $numb) = 0;
+    my $pred = ""; #Предыдущий символ
+			for (@source) {
+        			if ( $_ =~ m/^[-+]$/ and $pred =~ m/^((\(|\s|)|([\+\-\/\*\^\(]))$/ ) { #Унарный оператор
+            			push( @result, "U" . $_ );
+        	}
+        			elsif ($_ =~ m/^\d+$/ ) {  #Число в ДЕСЯТЕРИЧНОЙ ЗАПИСИ
+            			$numb++;
+            			push( @result, 0 + $_ )
+        	}	
+        			elsif ( $_ =~ m/^\d*\.?\d+((e?[-+]?\d+)|(\d*))$/ ) { #Число 0e+1
+            			$numb++;
+            			push( @result,  0 + $_ );
+        	}
+					else {
+            			$operator += ( $_ =~ m/^([\+\-\*\/\^])$/ ? 1 : 0 );
+            			$skobka += ( $_ =~ m/^\($/ ? 1 : 0); 
+						$skobka -= ( $_ =~ m/^\)$/ ? 1 : 0 );
+            			push( @result, $_ );
+        	}
+       		 		$pred = $_;
+    }
+    								if ( !$numb ) { die "There is no NUMBEEERS";}
+    								if ( $skobka ) {die "There is hmm...";}
+    								if ( !($numb == ($operator + 1) ) ) { die "There is something with your count of parameters";}
+    return \@result; 
 }
 
 1;
