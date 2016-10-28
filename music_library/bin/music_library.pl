@@ -17,12 +17,25 @@
 #      CREATED: 23.10.2016 15:37:45
 #     REVISION: ---
 #===============================================================================
+package main;
 
 use strict;
 use warnings;
 use utf8;
-use FindBin;
-use lib "$FindBin::Bin/../lib";
-use Local::MyLibrary qw(music_lib);
 
-Local::MyLibrary::music_lib();
+use FindBin;
+use Getopt::Long;
+require "$FindBin::Bin/../lib/massGen.pl"; #генерация рабочего массива согласно атрибутам
+require "$FindBin::Bin/../lib/hashGen.pl"; #генерация рабочего хэша
+require "$FindBin::Bin/../lib/hashPrint.pl"; #принт по заданному шаблону
+
+my @pos;
+while (<STDIN>) {
+	    if ($_) {push(@pos, [$_ =~ m/.\/(.*)\/(\d+)\s-\s(.*)\/(.*)\.(.*)$/])};
+     				#               0      1      2       3       4
+     				#             band - year - album - track - format
+}
+my @nos = massGen(@pos); #cоставляем строки по аргументам и записываем их в массив, после чего сортируем
+my %hash = hashGen(@nos); #составляем хэш, в котором у каждого ключа последний элемент массива - длина максимальной строки
+#hashPrint(%hash, $columns);
+
