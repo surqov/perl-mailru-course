@@ -26,7 +26,17 @@ sub hashPrint {
 	my %hash = %{shift()};
 	my $count = shift;
 	my $column = shift;
-
+	
+	#найдем ширину таблицы в зависимости от имен столбцов
+	my $sum = 0;
+	while($column){
+		if ($column =~ s/(band,\s)|(band$)//) {$sum += $hash{band}[$count]}
+		if ($column =~ s/(year,\s)|(year$)//) {$sum += $hash{year}[$count]}
+		if ($column =~ s/(album,\s)|(album$)//) {$sum += $hash{album}[$count]}
+		if ($column =~ s/(track,\s)|(track$)//) {$sum += $hash{track}[$count]}
+		if ($column =~ s/(format,\s)|(format$)//) {$sum += $hash{format}[$count]}
+	}
+print $sum;	
 }
 	
 1;
