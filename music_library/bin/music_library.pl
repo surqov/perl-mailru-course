@@ -35,7 +35,8 @@ while (<STDIN>) {
      				#               0      1      2       3       4
      				#             band - year - album - track - format
 }
-my @nos = massGen(@pos); #cоставляем строки по аргументам и записываем их в массив, после чего сортируем
+my @nos = massGen(@pos); #cоставляем строки по аргументам, удаляя лишнее, и записываем их в массив, после чего сортируем
 my %hash = hashGen(@nos); #составляем хэш, в котором у каждого ключа последний элемент массива - длина максимальной строки
+hashPrint(\%hash, scalar @nos, "band, year, album, track, format");
 #hashPrint(%hash, $columns);
 
