@@ -26,17 +26,34 @@ sub hashPrint {
 	my %hash = %{shift()};
 	my $count = shift;
 	my $column = shift;
+	my $temp = $column;
+
+	my $count_of_atribut = scalar (split ",", $column);
+	print $count_of_atribut;
 	
 	#найдем ширину таблицы в зависимости от имен столбцов
 	my $sum = 0;
 	while($column){
-		if ($column =~ s/(band,\s)|(band$)//) {$sum += $hash{band}[$count]}
-		if ($column =~ s/(year,\s)|(year$)//) {$sum += $hash{year}[$count]}
-		if ($column =~ s/(album,\s)|(album$)//) {$sum += $hash{album}[$count]}
-		if ($column =~ s/(track,\s)|(track$)//) {$sum += $hash{track}[$count]}
-		if ($column =~ s/(format,\s)|(format$)//) {$sum += $hash{format}[$count]}
+		if ($column =~ s/(band,\s)|(band$)//) {$sum += 2+$hash{band}[$count]}
+		if ($column =~ s/(year,\s)|(year$)//) {$sum += 2+$hash{year}[$count]}
+		if ($column =~ s/(album,\s)|(album$)//) {$sum += 2+$hash{album}[$count]}
+		if ($column =~ s/(track,\s)|(track$)//) {$sum += 2+$hash{track}[$count]}
+		if ($column =~ s/(format,\s)|(format$)//) {$sum += 2+$hash{format}[$count]}
 	}
-print $sum;	
+
+	my $lineUP = '';
+	for (my $i = 0; $i < $sum; $i++){
+		$lineUP.='-';
+	}
+	print '/' . $lineUP . '\\' . "\n";
+
+	for (my $i = 0; $i < $count; $i++){
+		print "| ";
+			for (my $g = 0; $g < $count_of_atribut; $g++){
+				$temp =~ /(.*?),/;
+				print $temp; # ЗДЕСЬ НУЖНО СДЕЛАТЬ СОХРАНЕНИЕ КАРЕТКИ В ПОИСКЕ ПО РЕГУЛЯРКЕ ЧТОБЫ ПОТОМ ПОДСТАВИТЬ В %hand{$1} и принтануть это дерьмо 
+	}
+}
 }
 	
 1;
