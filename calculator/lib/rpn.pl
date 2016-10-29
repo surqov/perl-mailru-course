@@ -24,11 +24,56 @@ require "$FindBin::Bin/../lib/tokenize.pl";
 sub rpn {
 	my $expr = shift;
 	my $source = tokenize($expr);
+	
+	my @stack; #стэк, куда полетят токены
 	my @rpn;
 
-	# ...
+	my %prioritet = (
+					'U-' => 4,
+					'U+' => 4,
+					'^'  => 4,
+					'*'  => 3,
+					'/'  => 3,
+					'+'  => 2,
+					'-'  => 2,
+					'('  => 1,
+				    ')'  => 1);
 
-	return \@rpn;
+	for (@$source) {
+			given ($_) {
+						when ($_ =~ /^\d*\.?\d*(?:e[+-]?\d+)?$/) {
+																	push @rpn, '' . $_;
+						}
+						when ($_ eq "(") {
+										push @stack, '(';
+						}
+						when ($_ eq ")") {
+										while ($stack[-1] ne '(') {
+																	push @rpn, '' . pop @stack;
+										}	
+						pop @stack;
+						}
+						when (m{^(?:U[+-]|[*/^+-])$}) {
+							if ($_ =~ /^(?:U[+-]|\^)/) {
+								while (@stack && $prioritet{$_} < $prioritet{$stack[-1]}) {
+																							push @rpn, pop @stack;
+								}
+							} 
+							else {
+								while (@stack && $prioritet{$_} <= $prioritet{$stack[-1]}) {
+																							push @rpn, pop @stack;
+								}
+							}
+							push @stack, '' . $_;
+						}
+				default {
+					die "Unknown symbol '$_'";
+				}
+			}
+		}
+		push @rpn, reverse @stack;
+
+return \@rpn;
 }
 
 1;
