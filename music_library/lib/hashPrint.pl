@@ -29,11 +29,10 @@ sub hashPrint {
 	my $temp = $column;
 
 	my $count_of_atribut = scalar (split ",", $column);
-	print $count_of_atribut;
 	
 	#найдем ширину таблицы в зависимости от имен столбцов
 	my $sum = 0;
-	while($column){
+	while($column){ #вычисляем общую ширину таблицы и складываем значение в sum
 		if ($column =~ s/(band,\s)|(band$)//) {$sum += 2+$hash{band}[$count]}
 		if ($column =~ s/(year,\s)|(year$)//) {$sum += 2+$hash{year}[$count]}
 		if ($column =~ s/(album,\s)|(album$)//) {$sum += 2+$hash{album}[$count]}
@@ -41,19 +40,58 @@ sub hashPrint {
 		if ($column =~ s/(format,\s)|(format$)//) {$sum += 2+$hash{format}[$count]}
 	}
 
+	$column = $temp;
+	my $lineBETWEN = '';
+	while($column){ #вычисляем расположение плюсиков между ячейками таблицы
+		if ($column =~ s/(band,\s)|(band$)//) { for (my $i = 0; $i < $hash{band}[$count]+2; $i++) {
+														$lineBETWEN .= '-';}	
+												$lineBETWEN .= '+';
+		}
+		
+		if ($column =~ s/(year,\s)|(year$)//) { for (my $i = 0; $i < $hash{year}[$count]+2; $i++) {
+														$lineBETWEN .= '-';}	
+												$lineBETWEN .= '+';
+		}
+
+		if ($column =~ s/(album,\s)|(album$)//) { for (my $i = 0; $i < $hash{album}[$count]+2; $i++) {
+														$lineBETWEN .= '-';}	
+												$lineBETWEN .= '+';
+		}
+
+		if ($column =~ s/(track,\s)|(track$)//) { for (my $i = 0; $i < $hash{track}[$count]+2; $i++) {
+													$lineBETWEN .= '-';}	
+												$lineBETWEN .= '+';
+		}	
+	
+		if ($column =~ s/(format,\s)|(format$)//) { for (my $i = 0; $i < $hash{format}[$count]+2; $i++) {
+													$lineBETWEN .= '-';}	
+												$lineBETWEN .= '+';
+		}
+	}
+	
+	chop $lineBETWEN;
+
 	my $lineUP = '';
-	for (my $i = 0; $i < $sum; $i++){
+	my $print_format = '';
+	for (my $i = 0; $i < $sum+$count_of_atribut-1; $i++){  #генерируем строку из '-' равную sum+количество столбцов-1
 		$lineUP.='-';
 	}
-	print '/' . $lineUP . '\\' . "\n";
-
-	for (my $i = 0; $i < $count; $i++){
-		print "| ";
-			for (my $g = 0; $g < $count_of_atribut; $g++){
-				$temp =~ /(.*?),/;
-				print $temp; # ЗДЕСЬ НУЖНО СДЕЛАТЬ СОХРАНЕНИЕ КАРЕТКИ В ПОИСКЕ ПО РЕГУЛЯРКЕ ЧТОБЫ ПОТОМ ПОДСТАВИТЬ В %hand{$1} и принтануть это дерьмо 
-	}
-}
+	print '/' . $lineUP . '\\' . "\n"; #печатаем верхнюю строку(ну, в принципе, она же и нижняя будет)
+	$column = $temp;
+		for (my $i = 0; $i < $count; $i++){
+			print "| ";
+				$temp = $column;
+					for (my $g = 0; $g < $count_of_atribut; $g++){
+					$temp =~ s/(band|year|album|track|format)//;
+					$print_format = '%'.($hash{$1}[$count]).'s';
+					printf("$print_format", "$hash{$1}[$i]");
+					print ' | ';
+					}			
+			print "\n";
+			next if ($i == $count-1);
+			print '|' . $lineBETWEN . "|\n";
+		}
+	print '\\' . $lineUP . '/' . "\n";
 }
 	
 1;
