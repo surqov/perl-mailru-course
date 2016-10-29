@@ -30,7 +30,7 @@ require "$FindBin::Bin/../lib/hashGen.pl"; #генерация рабочего 
 require "$FindBin::Bin/../lib/hashPrint.pl"; #принт по заданному шаблону
 
 my @pos;
-while (<STDIN>) {
+while (<STDIN>) {   #разбиваем входную строку на характерные ячейки по /
 	    if ($_) {push(@pos, [$_ =~ m/.\/(.*)\/(\d+)\s-\s(.*)\/(.*)\.(.*)$/])};
      				#               0      1      2       3       4
      				#             band - year - album - track - format
