@@ -33,11 +33,11 @@ sub hashPrint {
 	#найдем ширину таблицы в зависимости от имен столбцов
 	my $sum = 0;
 	while($column){ #вычисляем общую ширину таблицы и складываем значение в sum
-		if ($column =~ s/(band,\s)|(band$)//) {$sum += 2+$hash{band}[$count]}
-		if ($column =~ s/(year,\s)|(year$)//) {$sum += 2+$hash{year}[$count]}
-		if ($column =~ s/(album,\s)|(album$)//) {$sum += 2+$hash{album}[$count]}
-		if ($column =~ s/(track,\s)|(track$)//) {$sum += 2+$hash{track}[$count]}
-		if ($column =~ s/(format,\s)|(format$)//) {$sum += 2+$hash{format}[$count]}
+		if ($column =~ s/(band,)|(band$)//) {$sum += 2+$hash{band}[$count]}
+		if ($column =~ s/(year,)|(year$)//) {$sum += 2+$hash{year}[$count]}
+		if ($column =~ s/(album,)|(album$)//) {$sum += 2+$hash{album}[$count]}
+		if ($column =~ s/(track,)|(track$)//) {$sum += 2+$hash{track}[$count]}
+		if ($column =~ s/(format,)|(format$)//) {$sum += 2+$hash{format}[$count]}
 	}
 
 	$column = $temp;
