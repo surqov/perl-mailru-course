@@ -42,34 +42,18 @@ sub hashPrint {
 
 	$column = $temp;
 	my $lineBETWEN = '';
-	while($column){ #вычисляем расположение плюсиков между ячейками таблицы
-		if ($column =~ s/(band,\s)|(band$)//) { for (my $i = 0; $i < $hash{band}[$count]+2; $i++) {
-														$lineBETWEN .= '-';}	
-												$lineBETWEN .= '+';
-		}
-		
-		if ($column =~ s/(year,\s)|(year$)//) { for (my $i = 0; $i < $hash{year}[$count]+2; $i++) {
-														$lineBETWEN .= '-';}	
-												$lineBETWEN .= '+';
-		}
-
-		if ($column =~ s/(album,\s)|(album$)//) { for (my $i = 0; $i < $hash{album}[$count]+2; $i++) {
-														$lineBETWEN .= '-';}	
-												$lineBETWEN .= '+';
-		}
-
-		if ($column =~ s/(track,\s)|(track$)//) { for (my $i = 0; $i < $hash{track}[$count]+2; $i++) {
-													$lineBETWEN .= '-';}	
-												$lineBETWEN .= '+';
-		}	
 	
-		if ($column =~ s/(format,\s)|(format$)//) { for (my $i = 0; $i < $hash{format}[$count]+2; $i++) {
-													$lineBETWEN .= '-';}	
-												$lineBETWEN .= '+';
-		}
-	}
-	
+	for (my $g = 0; $g < $count_of_atribut; $g++){
+					$column =~ s/(band|year|album|track|format)//;
+					for (my $i = 0; $i < $hash{$1}[$count]+2; $i++) {
+																		$lineBETWEN .= '-';}
+													$lineBETWEN .= '+';	
+					}	
+
 	chop $lineBETWEN;
+	#print $lineBETWEN;
+
+
 
 	my $lineUP = '';
 	my $print_format = '';
