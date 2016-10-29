@@ -60,7 +60,7 @@ sub hashPrint {
 	for (my $i = 0; $i < $sum+$count_of_atribut-1; $i++){  #генерируем строку из '-' равную sum+количество столбцов-1
 		$lineUP.='-';
 	}
-	print '/' . $lineUP . '\\' . "\n"; #печатаем верхнюю строку(ну, в принципе, она же и нижняя будет)
+	if ($hash{track}[0]) {print '/' . $lineUP . '\\' . "\n";} #печатаем верхнюю строку(ну, в принципе, она же и нижняя будет)
 	$column = $temp;
 		for (my $i = 0; $i < $count; $i++){
 			print "| ";
@@ -69,13 +69,14 @@ sub hashPrint {
 					$temp =~ s/(band|year|album|track|format)//;
 					$print_format = '%'.($hash{$1}[$count]).'s';
 					printf("$print_format", "$hash{$1}[$i]");
-					print ' | ';
+					if ($g == $count_of_atribut-1) {print ' |'}
+						else { print ' | ';}
 					}			
 			print "\n";
 			next if ($i == $count-1);
 			print '|' . $lineBETWEN . "|\n";
 		}
-	print '\\' . $lineUP . '/' . "\n";
+	if ($hash{track}[0]){print '\\' . $lineUP . '/' . "\n";}
 }
 	
 1;

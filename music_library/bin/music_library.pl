@@ -37,6 +37,8 @@ while (<STDIN>) {
 }
 my @nos = massGen(@pos); #cоставляем строки по аргументам, удаляя лишнее, и записываем их в массив, после чего сортируем
 my %hash = hashGen(@nos); #составляем хэш, в котором у каждого ключа последний элемент массива - длина максимальной строки
-hashPrint(\%hash, scalar @nos, "year,band,album,track,year");
-#hashPrint(%hash, $columns);
+hashPrint(\%hash, scalar @nos, "band,year,album,track,format"); #выводим на печать по заданному аргументами шаблону 
+
+#Дописать обработку COLUMNS, потому что GetOptions шифтает ARGV, а мне нужно сюда затащить из MassGen это всё 
+
 
