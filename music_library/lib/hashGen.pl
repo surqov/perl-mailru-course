@@ -1,22 +1,4 @@
 #!/usr/bin/env perl 
-#===============================================================================
-#
-#         FILE: hashGen.pl
-#
-#        USAGE: ./hashGen.pl  
-#
-#  DESCRIPTION: 
-#
-#      OPTIONS: ---
-# REQUIREMENTS: ---
-#         BUGS: ---
-#        NOTES: ---
-#       AUTHOR: YOUR NAME (), 
-# ORGANIZATION: 
-#      VERSION: 1.0
-#      CREATED: 28.10.2016 21:11:48
-#     REVISION: ---
-#===============================================================================
 
 use strict;
 use warnings;

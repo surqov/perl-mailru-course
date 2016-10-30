@@ -1,22 +1,4 @@
 #!/usr/bin/env perl 
-#===============================================================================
-#
-#         FILE: massGen.pl
-#
-#        USAGE: ./massGen.pl  
-#
-#  DESCRIPTION: 
-#
-#      OPTIONS: ---
-# REQUIREMENTS: ---
-#         BUGS: ---
-#        NOTES: ---
-#       AUTHOR: YOUR NAME (), 
-# ORGANIZATION: 
-#      VERSION: 1.0
-#      CREATED: 28.10.2016 00:06:08
-#     REVISION: ---
-#===============================================================================
 
 use strict;
 use warnings;
@@ -76,7 +58,7 @@ sub massGen{
 	    elsif ((defined($sort)) && ($sort =~ /track/)){@pos = sort { $a->[3] cmp $b->[3] } @los;}
 		elsif ((defined($sort)) && ($sort =~ /format/)){@pos = sort { $a->[4] cmp $b->[4] } @los;}
 	else {@pos = @los}
-	return @pos;
+	return ($columns, @pos);
 }
 
 1;

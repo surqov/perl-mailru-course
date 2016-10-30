@@ -1,22 +1,4 @@
 #!/usr/bin/env perl 
-#===============================================================================
-#
-#         FILE: hashPrint.pl
-#
-#        USAGE: ./hashPrint.pl  
-#
-#  DESCRIPTION: 
-#
-#      OPTIONS: ---
-# REQUIREMENTS: ---
-#         BUGS: ---
-#        NOTES: ---
-#       AUTHOR: YOUR NAME (), 
-# ORGANIZATION: 
-#      VERSION: 1.0
-#      CREATED: 28.10.2016 23:11:19
-#     REVISION: ---
-#===============================================================================
 
 use strict;
 use warnings;
@@ -27,6 +9,10 @@ sub hashPrint {
 	my $count = shift;
 	my $column = shift;
 	my $temp = $column;
+						if (($column !~ /band|year|album|track|format/) or ($column eq '')) {
+							return 0;
+							die "Bad column format";
+						}
 
 	my $count_of_atribut = scalar (split ",", $column);
 	
