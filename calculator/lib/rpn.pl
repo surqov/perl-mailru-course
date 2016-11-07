@@ -26,18 +26,18 @@ sub rpn {
 	my $source = tokenize($expr);
 	
 	my @stack; #стэк, куда полетят токены
-	my @rpn;
+	my @rpn; 
 
 	my %prioritet = (
-					'U-' => 4,
-					'U+' => 4,
-					'^'  => 4,
-					'*'  => 3,
-					'/'  => 3,
-					'+'  => 2,
-					'-'  => 2,
-					'('  => 1,
-				    ')'  => 1);
+						'U-' 	=> 		4,
+						'U+' 	=> 		4,
+						'^'  	=> 		4,
+						'*'  	=> 		3,
+						'/'  	=> 		3,
+						'+'  	=> 		2,
+						'-'  	=> 		2,
+						'('  	=> 		1,
+				    	')'  	=> 		1);
 
 	for (@$source) {
 			given ($_) {
@@ -67,7 +67,7 @@ sub rpn {
 							push @stack, '' . $_;
 						}
 				default {
-					die "Unknown symbol '$_'";
+					die "Don't know what does it mean - $_";
 				}
 			}
 		}
