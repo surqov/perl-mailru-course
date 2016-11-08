@@ -1,3 +1,2 @@
-ls -l | perl -lnaE 'if (scalar @F < 8) {pass} else {$,=";"; if (scalar @F > 9) {$i=9; while ($i < scalar @F){@F[8] = @F[8]." ".@F[$i]; delete @F[$i]; $i++};} say @F}' > output.txt
-
+ls -l | perl -lnE 'my @F = split(/\s+/, $_, 9); if (scalar @F < 8) {pass} else {$,=";"; say @F}'
 cat output.txt | perl -laF";" -E 'if (@F[4] > 1024*1024) {$i++; say @F[8]}}{say "$., $i"'
