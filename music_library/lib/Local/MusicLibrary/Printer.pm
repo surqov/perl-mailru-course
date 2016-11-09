@@ -2,55 +2,19 @@ package Local::MusicLibrary::Printer;
 
 use strict;
 use warnings;
-use List::Util qw(sum);
-use Scalar::Util qw(looks_like_number);
-use Local::MusicLibrary::Constants;
+use utf8;
+
+use DDP;
+use Data::Dumper;
+
 use Exporter 'import';
 our @EXPORT_OK = qw(print_table);
 
-# DEBUG
-use DDP;
-
-our @OPTFIELDS      = @Local::MusicLibrary::Constants::OPTFIELDS;
-our $OPT_SORT       = $Local::MusicLibrary::Constants::OPT_SORT;
-our $OPT_COLUMNS    = $Local::MusicLibrary::Constants::OPT_COLUMNS;
-
-sub filter_library {
-    my ($library, $filters) = @_;
-
-    my $temp = [ grep {
-            my $temp = $_;
-            grep {
-                ( looks_like_number ${$filters}{$_} )
-                ? ( ${$temp}{$_} == ${$filters}{$_} )
-                : ( ${$temp}{$_} eq ${$filters}{$_} )
-            } keys %{$filters};
-        } @{$library} ];
-
-    ( @{$temp} || %{$filters} ) ? ( return $temp ) : ( return $library )
-}
-
-sub sort_library {
-    my ($library, $options) = @_;
-
-    if (${$options}{$OPT_SORT}) {
-            if ( looks_like_number ${@{$library}[0]}{${$options}{$OPT_SORT}} ) {
-                @{$library} = sort {
-                    ${$a}{${$options}{$OPT_SORT}} <=> ${$b}{${$options}{$OPT_SORT}}
-                } @{$library}
-            }
-            else {
-                @{$library} = sort {
-                    ${$a}{${$options}{$OPT_SORT}} cmp ${$b}{${$options}{$OPT_SORT}}
-                } @{$library}
-            }
-    }
-
-    return $library;
-}
+our @FIELDS = qw(band year album track format);
+our $OPT_COLUMNS    = "columns";
 
 sub make_columns {
-    my ($library, $columns) = @_;
+    my ($lib, $columns) = @_;
 
     foreach (@{$library}) {
         my $entry = $_;
@@ -60,7 +24,6 @@ sub make_columns {
             }
         }
     }
-
     return $library
 }
 
@@ -90,17 +53,10 @@ sub printer {
 sub print_table {
     my ($library, $filters, $options) = @_;
 
-    unless ( @{${$options}{$OPT_COLUMNS}} ) {
-        return
-    }
-
     my %colwidth;
     $colwidth{$_} = 0 for keys %{${$library}[0]};
 
-    printer( make_columns( sort_library( filter_library(
-                        $library, $filters),
-                    $options),
-                \%colwidth),
+    printer( make_columns,
             \%colwidth,
             ${$options}{$OPT_COLUMNS});
 }

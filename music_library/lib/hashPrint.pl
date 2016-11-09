@@ -9,7 +9,7 @@ sub hashPrint {
 	my $count = shift;
 	my $column = shift;
 	my $temp = $column;
-						if (($column !~ /band|year|album|track|format/) or ($column eq '')) {
+						if (($column !~ /?band|?year|?album|?track|?format/) or ($column eq '')) {
 							return 0;
 							die "Bad column format";
 						}

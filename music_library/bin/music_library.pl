@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/env perl 
 
 use strict;
 use warnings;
@@ -13,14 +13,15 @@ use Local::MusicLibrary qw(music_library);
 
 my @library;
 while (<STDIN>) {
-    	  if (m/
+    	  		(m/
             	^\.\/
             	(?<band>[^\/]+)\/
             	(?<year>\d+)\s[-]\s
 				(?<album>[^\/]+)\/
            	   	(?<track>[^\/]+)[\.]
 				(?<format>\w+)\n?$
-            	/x) { push(@library, {%+}) }
-		  else 		{ die "Invalid input" }
+            	/x)
+		   		? ( push(@library, {%+}) )
+		        : ( die "Invalid input" )
 }
 Local::MusicLibrary::music_library(\@library);
