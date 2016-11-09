@@ -1,8 +1,6 @@
 =head1 DESCRIPTION
-
 Эта функция должна принять на вход ссылку на массив, который представляет из себя обратную польскую нотацию,
 а на выходе вернуть вычисленное выражение
-
 =cut
 
 use 5.010;
@@ -16,26 +14,32 @@ BEGIN{
 	}
 }
 no warnings 'experimental';
+
 sub evaluate {
 	my $rpn = shift;
 	my @stack;
 
-	for my $elem (@$rpn) {
-		if ($elem =~ m{^[*/^+-]$}) {
-			my $operation = $elem eq '^' ? '**' : $elem;
-			die "No operands to complete operation $elem" if @stack < 2;
-			my $right = pop @stack;
-			my $left = pop @stack;
-			push @stack, eval "$left$operation$right";
-		} elsif ($elem =~ m{^U([+-])$}) {
-			die "No operands to complete operation $elem" if @stack < 1;
-			my $operand = pop @stack;
-			push @stack, eval "$1 $operand";
-		} else {
-			push @stack, $elem;
+	my ($operation, $operand, $right, $left);
+
+	for (@$rpn) {
+		given($_) { 
+	   		when ($_ =~ m{^[*/^+-]$}) {
+					$operation = $_ eq '^' ? '**' : $_;
+												die "There is no OPERANDS to complete $_" if @stack < 2;
+					$right = pop @stack;
+				   	$left = pop @stack;
+					push @stack, eval "$left$operation$right";
+			} 
+			when ($_ =~ m{^U([+-])$}) {
+												die "There is no OPERANDS to complete $_" if @stack < 1;
+					$operand = pop @stack;
+					push @stack, eval "$1 $operand";
+			} 
+			default {
+					push @stack, $_;
+			}
 		}
 	}
-
 	return pop @stack;
 }
 

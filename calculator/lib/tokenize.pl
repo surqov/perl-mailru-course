@@ -25,7 +25,7 @@ BEGIN{
 }
 no warnings 'experimental';
 
-sub tokenize {
+sub tokenize($) {
 				chomp(my $expr = shift);
 
 	my @source = grep ( !m/^(\s*|)$/, split m{
@@ -55,14 +55,15 @@ sub tokenize {
 					else {
             			$operator += ( $_ =~ m/^([\+\-\*\/\^])$/ ? 1 : 0 );
             			$skobka += ( $_ =~ m/^\($/ ? 1 : 0); 
-						$skobka -= ( $_ =~ m/^\)$/ ? 1 : 0 );
+						$skobka -= ( $_ =~ m/^\)$/ ? 1 : 0);
             			push( @result, $_ );
         	}
        		 		$pred = $_;
-    }
+    } 
     								if ( !$numb ) { die "There is no NUMBEEERS";}
     								if ( $skobka ) {die "There is hmm...";}
-    								if ( !($numb == ($operator + 1) ) ) { die "There is something with your count of parameters";}
+									if (($operator) and ($numb != $operator + 1 )) { die "There is something with your count of parameters";}
+										elsif ((!($operator)) and ($numb !=1)) {die "Mismatch operators and numbers";}
     return \@result; 
 }
 
