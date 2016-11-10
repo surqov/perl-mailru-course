@@ -8,25 +8,32 @@ use DDP;
 use Data::Dumper;
 
 use Exporter 'import';
-our @EXPORT_OK = qw(print_table);
+our @EXPORT_OK = qw(make_columns);
 
 our @FIELDS = qw(band year album track format);
-our $OPT_COLUMNS    = "columns";
 
 sub make_columns {
-    my ($lib, $columns) = @_;
+    my ($lib, $options) = @_;
 
-    foreach (@{$library}) {
-        my $entry = $_;
-        foreach (keys %{$_}) {
-            if ( length(${$entry}{$_}) > ${$columns}{$_}) {
-                ${$columns}{$_} = length(${$entry}{$_});
-            }
-        }
-    }
-    return $library
+	my %hash = %{$options};
+	my @arr = @{$hash{'columns'}};
+	p @arr;
+
+
+
+	#foreach (@{$library}) {
+	#   my $entry = $_;
+	#   foreach (keys %{$_}) {
+	#       if ( length(${$entry}{$_}) > ${$columns}{$_}) {
+	#           ${$columns}{$_} = length(${$entry}{$_});
+	#       }
+	#   }
+    
+	#return $library
 }
 
+1;
+=comment
 sub printer {
     my ($table, $colwidth, $fields) = (@_);
 
