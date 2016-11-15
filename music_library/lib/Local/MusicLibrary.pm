@@ -25,7 +25,8 @@ sub music_library {
 	my $library = shift;
 	my ($options, $filters, $ready_lib) = Local::MusicLibrary::Filter::get_filtered_lib($library);
 #	p $options;
-	Local::MusicLibrary::Printer::make_columns($ready_lib, $options);
+	print Dumper( $ready_lib );
+#	Local::MusicLibrary::Printer::make_columns($ready_lib, $options);
 	#Local::MusicLibrary::Printer::print_table($ready_lib, $filters, $options);
 }
 

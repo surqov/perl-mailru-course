@@ -56,23 +56,30 @@ sub sort_library {
 
 sub filter_library {
     my $lib_to_filter = shift;
+	my @arr = @$lib_to_filter;
+	my @clear;
 
-	my @arr = grep { my $hash = $_;
-				grep { my $filter = $_;
-				($filter eq "year")
-			?	(${$hash}{$filter} == $filters{$filter})
-			:	(${$hash}{$filter} eq $filters{$filter})
-				} keys %filters;
-	} @$lib_to_filter;
+	for my $key (keys %filters){
+		my $i =0;
+		for my $line (@$lib_to_filter) {
+				if ($key eq 'year') {
+						if ($filters{$key} != $line->{$key}) {delete $arr[$i]}
+				}
+				else {
+						if ($filters{$key} ne $line->{$key}) {delete $arr[$i]}
+				}
+			$i++;
+		}
+	}
+	for (my $i = 0; $i < scalar @arr; $i++){ if ($arr[$i]) {push (@clear, $arr[$i])}};
 
-	(@arr || %filters) ? (return \@arr) : ( return $lib_to_filter )
+	return \$clear[$i];
 }
-
 sub get_filtered_lib{
 	my $lib = shift;
 	
 	get_options();
-	return (\%options, \%filters, \filter_library(sort_library($lib)));
+	return (\%options, \%filters, \sort_library(filter_library($lib)));
 }
 
 1;
