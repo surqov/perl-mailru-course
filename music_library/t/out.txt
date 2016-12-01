@@ -1,9 +1,0 @@
-1..8
-ok 1 - basic
-ok 2 - no rows
-ok 3 - filter
-ok 4 - int filter
-ok 5 - sort
-ok 6 - int sort
-not ok 7 - columns
-not ok 8 - no columns

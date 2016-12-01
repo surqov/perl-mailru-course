@@ -1,4 +1,4 @@
-# This Makefile is for the Local::Iterator extension to perl.
+# This Makefile is for the Local::MusicLibrary extension to perl.
 #
 # It was generated automatically by MakeMaker version
 # 7.1001 (Revision: 71001) from the contents of
@@ -14,7 +14,7 @@
 #     BUILD_REQUIRES => {  }
 #     CONFIGURE_REQUIRES => {  }
 #     EXE_FILES => [q[bin/music_library.pl]]
-#     NAME => q[Local::Iterator]
+#     NAME => q[Local::MusicLibrary]
 #     PREREQ_PM => {  }
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/Local/MusicLibrary.pm]
@@ -54,13 +54,13 @@ VENDORLIBEXP = /usr/share/perl5/vendor_perl
 AR_STATIC_ARGS = cr
 DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
-NAME = Local::Iterator
-NAME_SYM = Local_Iterator
-VERSION = 1.00
+NAME = Local::MusicLibrary
+NAME_SYM = Local_MusicLibrary
+VERSION = 1.01
 VERSION_MACRO = VERSION
-VERSION_SYM = 1_00
+VERSION_SYM = 1_01
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 1.00
+XS_VERSION = 1.01
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -146,8 +146,8 @@ MM_REVISION = 71001
 # PARENT_NAME = NAME without BASEEXT and no trailing :: (eg Foo::Bar)
 # DLBASE  = Basename part of dynamic library. May be just equal BASEEXT.
 MAKE = make
-FULLEXT = Local/Iterator
-BASEEXT = Iterator
+FULLEXT = Local/MusicLibrary
+BASEEXT = MusicLibrary
 PARENT_NAME = Local
 DLBASE = $(BASEEXT)
 VERSION_FROM = lib/Local/MusicLibrary.pm
@@ -185,10 +185,16 @@ PERL_ARCHIVEDEP    =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Local/MusicLibrary.pm
+TO_INST_PM = lib/Local/MusicLibrary.pm \
+	lib/Local/MusicLibrary/Filter.pm \
+	lib/Local/MusicLibrary/Printer.pm
 
 PM_TO_BLIB = lib/Local/MusicLibrary.pm \
-	blib/lib/Local/MusicLibrary.pm
+	blib/lib/Local/MusicLibrary.pm \
+	lib/Local/MusicLibrary/Filter.pm \
+	blib/lib/Local/MusicLibrary/Filter.pm \
+	lib/Local/MusicLibrary/Printer.pm \
+	blib/lib/Local/MusicLibrary/Printer.pm
 
 
 # --- MakeMaker platform_constants section:
@@ -257,8 +263,8 @@ CI = ci -u
 RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
-DISTNAME = Local-Iterator
-DISTVNAME = Local-Iterator-1.00
+DISTNAME = Local-MusicLibrary
+DISTVNAME = Local-MusicLibrary-1.01
 
 
 # --- MakeMaker macro section:
@@ -509,13 +515,13 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) 'meta-spec:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  url: http://module-build.sourceforge.net/META-spec-v1.4.html' >> META_new.yml
 	$(NOECHO) $(ECHO) '  version: '\''1.4'\''' >> META_new.yml
-	$(NOECHO) $(ECHO) 'name: Local-Iterator' >> META_new.yml
+	$(NOECHO) $(ECHO) 'name: Local-MusicLibrary' >> META_new.yml
 	$(NOECHO) $(ECHO) 'no_index:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  directory:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - t' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - inc' >> META_new.yml
 	$(NOECHO) $(ECHO) 'requires: {}' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: '\''1.00'\''' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: '\''1.01'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'x_serialization_backend: '\''CPAN::Meta::YAML version 0.018'\''' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
@@ -533,7 +539,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",' >> META_new.json
 	$(NOECHO) $(ECHO) '      "version" : "2"' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
-	$(NOECHO) $(ECHO) '   "name" : "Local-Iterator",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "name" : "Local-MusicLibrary",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "no_index" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '      "directory" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '         "t",' >> META_new.json
@@ -556,7 +562,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "stable",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "1.00",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "1.01",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "x_serialization_backend" : "JSON::PP version 2.27300"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
@@ -872,7 +878,9 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  lib/Local/MusicLibrary.pm blib/lib/Local/MusicLibrary.pm 
+	  lib/Local/MusicLibrary.pm blib/lib/Local/MusicLibrary.pm \
+	  lib/Local/MusicLibrary/Filter.pm blib/lib/Local/MusicLibrary/Filter.pm \
+	  lib/Local/MusicLibrary/Printer.pm blib/lib/Local/MusicLibrary/Printer.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 

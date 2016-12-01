@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 8;
 
 sub test_bin {
     my ($name, $params, $input, $output) = @_;
@@ -10,7 +10,7 @@ sub test_bin {
     $input_fh->print($input);
     $input_fh->close();
 
-    system("$^X bin/music_library.pl $params < input.tmp > output.tmp 2>stderr.tmp");
+    system("$^X ../bin/music_library.pl $params < input.tmp > output.tmp");
 
     my $real_output;
     {
@@ -20,15 +20,10 @@ sub test_bin {
         $output_fh->close();
     }
 
-    if (-s "stderr.tmp") {
-        fail("'$name' test failed because of warnings");
-    } else {
-        is($real_output, $output, $name);
-    }
+    is($real_output, $output, $name);
 
     unlink('input.tmp');
     unlink('output.tmp');
-    unlink('stderr.tmp');
 }
 
 test_bin

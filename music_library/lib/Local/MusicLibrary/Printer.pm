@@ -18,7 +18,7 @@ sub get_max_length {
 	my %options = %{shift()};	
 
 	@FIELDS = @{$options{'columns'}};
-	
+	exit if (scalar @FIELDS == 0);	
 	for (@FIELDS) {	$length{$_} = 0; }
 	
 	for (@library) {

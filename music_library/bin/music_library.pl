@@ -22,6 +22,7 @@ while (<STDIN>) {
 				(?<format>\w+)\n?$
             	/x)
 		   		? ( push(@library, {%+}) )
-		        : ( die "Invalid input" )
+		        : ( die "Invalid input\n" )
 }
+die "There is no library\n" if (scalar @library < 2);
 Local::MusicLibrary::music_library(\@library);
