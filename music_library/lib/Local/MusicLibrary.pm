@@ -24,10 +24,7 @@ our $VERSION = '1.01';
 sub music_library {
 	my $library = shift;
 	my ($options, $filters, $ready_lib) = Local::MusicLibrary::Filter::get_filtered_lib($library);
-#	p $options;
-	print Dumper( $ready_lib );
-#	Local::MusicLibrary::Printer::make_columns($ready_lib, $options);
-	#Local::MusicLibrary::Printer::print_table($ready_lib, $filters, $options);
+	Local::MusicLibrary::Printer::out_print($ready_lib, $filters, $options);
 }
 
 1;

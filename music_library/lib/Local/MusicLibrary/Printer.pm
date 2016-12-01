@@ -8,66 +8,52 @@ use DDP;
 use Data::Dumper;
 
 use Exporter 'import';
-our @EXPORT_OK = qw(make_columns);
+our @EXPORT_OK = qw(out_print);
 
-our @FIELDS = qw(band year album track format);
+our @FIELDS;
+our %length;
 
-sub make_columns {
-    my ($lib, $options) = @_;
+sub get_max_length {
+	my @library = @{shift()};
+	my %options = %{shift()};	
 
-	my %hash = %{$options};
-	my @arr = @{$hash{'columns'}};
-	p @arr;
-
-
-
-
-
-	#foreach (@{$library}) {
-	#   my $entry = $_;
-	#   foreach (keys %{$_}) {
-	#       if ( length(${$entry}{$_}) > ${$columns}{$_}) {
-	#           ${$columns}{$_} = length(${$entry}{$_});
-	#       }
-	#   }
-    
-	#return $library
+	@FIELDS = @{$options{'columns'}};
+	
+	for (@FIELDS) {	$length{$_} = 0; }
+	
+	for (@library) {
+		my %line = %$_;
+			for (keys %line) {
+				my $key = $_;
+				next if (!(grep($_ eq $key, @FIELDS)));
+				if ($length{$key} < length $line{$key}) {$length{$key} = length $line{$key}}
+			}
+	}
 }
 
-1;
-=comment
-sub printer {
-    my ($table, $colwidth, $fields) = (@_);
+sub out_print{
+	my @library = @{shift()};
+	my %filters = %{shift()};
+	my %options = %{shift()};
 
-    unless (@{$table}) {
-        return
-    };
+	get_max_length(\@library, \%options);
+	my $width = -1;
+	for (@FIELDS) {
+		my $key = $_;
+		$width += 3+$length{$key};
+	}
+	my $border = "-"x$width;
+	
+	print "/$border\\\n";
+	print join
+          	'|'.join('+', map { '-' x ($length{$_} + 2) } @FIELDS)."|\n",
+          	map {
+            	my $elem = $_;
+            	'|'.join('|', map { sprintf " %*s ", $length{$_}, $elem->{$_} } @FIELDS)."|\n"
+         	 	} @library;
+  print "\\$border/\n";
+	
+	
 
-    my ($copy_array, $separator) = ([ @{$fields} ], "|");
-    my $defises = "-"x(sum(map { $_ = %{$colwidth}{$_} } @{$copy_array}) +
-            ($#{$copy_array} + 1) * 3 - 1);
-    $separator .= "-"x${$colwidth}{$_}."--+" foreach (@{$fields});
-    substr($separator, -1, 1, "|\n");
-
-    my $out = "/".$defises."\\\n";
-    foreach my $line (@{$table}) {
-        $out .= sprintf("| %${$colwidth}{$_}s ", ${$line}{$_}) foreach (@{$fields});
-        $out .= "|\n".$separator;
-    }
-    substr($out, rindex($out,$separator), length($out), "");
-
-    print($out .= ( "\\".$defises."/\n" ));
 }
-
-sub print_table {
-    my ($library, $filters, $options) = @_;
-
-    my %colwidth;
-    $colwidth{$_} = 0 for keys %{${$library}[0]};
-
-    printer( make_columns,
-            \%colwidth,
-            ${$options}{$OPT_COLUMNS});
-}
-
 1;

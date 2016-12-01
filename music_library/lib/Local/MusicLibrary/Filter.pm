@@ -51,7 +51,7 @@ sub sort_library {
     			@$lib_to_sort = sort { $a->{$sort_option} cmp $b->{$sort_option} } @$lib_to_sort;
   			}
 	}
-	return $lib_to_sort;
+	return \@$lib_to_sort;
 }
 
 sub filter_library {
@@ -72,14 +72,14 @@ sub filter_library {
 		}
 	}
 	for (my $i = 0; $i < scalar @arr; $i++){ if ($arr[$i]) {push (@clear, $arr[$i])}};
-
-	return \$clear[$i];
+	
+	return \@clear;
 }
 sub get_filtered_lib{
 	my $lib = shift;
 	
 	get_options();
-	return (\%options, \%filters, \sort_library(filter_library($lib)));
+	return (\%options, \%filters, sort_library(filter_library($lib)));
 }
 
 1;
