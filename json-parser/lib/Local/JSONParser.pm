@@ -5,7 +5,7 @@
 #
 #  DESCRIPTION:
 #
-#        FILES: ---
+#        FILES: --
 #         BUGS: ---
 #        NOTES: ---
 #       AUTHOR: YOUR NAME (), 
