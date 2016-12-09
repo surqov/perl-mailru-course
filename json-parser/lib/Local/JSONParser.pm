@@ -26,63 +26,52 @@ use base qw(Exporter);
 our @EXPORT_OK = qw( parse_json );
 our @EXPORT = qw( parse_json );
 
-sub clear_string{
-	my $string = shift;
-my $substr;
-	if ($string =~ /\\n/gc) {}
-	if ($string =~ /\\/gc) {}
-
-
-	while(!(/\G\"/gc)) {
-		  if (/\G\\n/gc) {$substr = $substr . chr(10);}
-		                  elsif (/\G\\\"/gc) {$substr = $substr . chr(34);}
-		                  elsif (/\G\\u(\w{3,4})/gc) {$substr = $substr . chr(hex($1));}
-		                  elsif (/\G\\t/gc) {$substr = $substr . chr(9);}
-		                 elsif (/\G\\/gc) {die "Invalid JSON sequence!";}
-		                 else {
-		                     /\G([^"\\]*)/gc;
-		                     $substr = $substr . $1;
-		                 }
-		             }
-		             return $substr;
-
-			  }
-
 sub parse_json {
 	my $source = shift;
-	
-	my %hash;
-	my $first = substr $source, 0, 1;
-	if ($first eq '[') {
-			$source =~ /\[(.*?)\]/gc;
-			my $get_array = $1;
-			my @arr = split(/,/, $get_array);
-			return \@arr;	
+
+	if ((substr $source, 0, 1) eq "[") {
+		$source =~ s/\[\s//g;
+		$source =~ s/\s\]//g;
+		$source =~ s/[\[\]]//g;
+		$source =~ s/,\s/,/g;
+		
+		my @arr = split (",", $source);
+		
+		for (my $i = 0; $i < scalar @arr; $i++) {
+			$arr[$i] =~ s/[\"\']//g;
+			if ($arr[$i] =~ /(\{.*?\})/) { $arr[$i] = parse_json($1);}
+		}	
+	return \@arr;
 	}
-	else {		for ($source){
+	else {
+
+			my %hash;
+
+			for ($source){
 				my $line = $_;
-					while ($line =~ /"(\w+)":/g) { 	
-						my $key = $1;
-						$line =~ /\w/g;
-						if 	($line =~ /$key":\s"(.+?)"/) {
-			   				my $substr = $1;
+				
+					while ($line =~ /"(\w+)":/gs) { 	
+							my $key = $1;
+							$line =~ /\w/g;
+						
+							if 	($line =~ /\n?"$key":\n?\s?\n?"(.+?)"/s) { #строка
+			   					my $substr = $1;
 
-							$hash{$key} = $substr;} 	#строка
-						elsif 	($line =~ /$key":\s(-?\d+[\.eE]?\d*[-+]*\d*)?/) {
-							$hash{$key} = $1} 			#число
-						if 	($line =~ /$key":\s(\[.*?\])/) {
-							my $substr = $1;
+								$hash{$key} = $substr;} 	
+							elsif 	($line =~ /\n?"$key":\n?\s?\n?(-?\d+[\.eE]?\d*[-+]*\d*)?/s) { #число						
+								$hash{$key} = $1} 			
+							if 	($line =~ /\n?"$key":\n?\s?\n?(\[.*?\])/s) { #массив
+								my $substr = $1;
 							
-							$hash{$key} = parse_json($substr);}
-						elsif   ($line =~ /$key":\s\{(.*?)\}/) {
-							my $substr = $1;
-							$hash{$key} = parse_json($substr);}	
-					}								
-				}
-
+								$hash{$key} = parse_json($substr);}
+							elsif   ($line =~ /\n?"$key":\n?\s?\n?\{(.*?)\}/s) { #хэш
+								my $substr = $1;
+								$hash{$key} = parse_json($substr);}	
+					}
+			}					
 	return \%hash;
-	}	
+	
+	}
 }
-
 1;
 
