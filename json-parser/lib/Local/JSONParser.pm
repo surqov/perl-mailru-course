@@ -54,17 +54,17 @@ sub parse_json {
 							my $key = $1;
 							$line =~ /\w/g;
 						
-							if 	($line =~ /\n?"$key":\n?\s?\n?"(.+?)"/s) { #строка
+							if 	($line =~ /$key"[\s\n]*?:[\s\n]*?"(.+?)"/ms) { #строка
 			   					my $substr = $1;
 
 								$hash{$key} = $substr;} 	
-							elsif 	($line =~ /\n?"$key":\n?\s?\n?(-?\d+[\.eE]?\d*[-+]*\d*)?/s) { #число						
+							elsif 	($line =~ /$key"[\s\n]*?:[\s\n]*?(-?\d+[\.eE]?\d*[-+]*\d*)/ms) { #число						
 								$hash{$key} = $1} 			
-							if 	($line =~ /\n?"$key":\n?\s?\n?(\[.*?\])/s) { #массив
+							if 	($line =~ /$key"[\s\n]*?:[\s\n]*?(\[.*?\])/ms) { #массив
 								my $substr = $1;
 							
 								$hash{$key} = parse_json($substr);}
-							elsif   ($line =~ /\n?"$key":\n?\s?\n?\{(.*?)\}/s) { #хэш
+							elsif   ($line =~ /$key"[\s\n]*?:[\s\n]*?\{(.*?)\}/ms) { #хэш
 								my $substr = $1;
 								$hash{$key} = parse_json($substr);}	
 					}
