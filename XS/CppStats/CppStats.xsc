@@ -19,21 +19,22 @@
 using namespace std;
 
 class CppStat {
-public:
-	CppStat(): map <char*, int> stats;
+	public:
+		map <char*, int> stats;
 	
-	void add (char* name, int val) {
-		if find(!stats.count(name)) {
-			stats.insert(make_pair(name, val));
+		void add (char* name, int val) {
+			if find(!stats.count(name)) {
+				stats.insert(make_pair(name, val));
+			}
 		}
-	}
-	void stat (char* name) {
-		return \stats;
-	}
+	
+		void stat (char* name) {
+			return \stats;
+		}
 
-	void new (){} 
+		void new (){} 
 }
-#line 37 "CppStats.c"
+#line 38 "CppStats.c"
 #ifndef PERL_UNUSED_VAR
 #  define PERL_UNUSED_VAR(var) if (0) var = var
 #endif
@@ -177,7 +178,7 @@ S_croak_xs_usage(const CV *const cv, const char *const params)
 #  define newXS_deffile(a,b) Perl_newXS_deffile(aTHX_ a,b)
 #endif
 
-#line 181 "CppStats.c"
+#line 182 "CppStats.c"
 
 XS_EUPXS(XS_CppStats_new); /* prototype to pass -Wmissing-prototypes */
 XS_EUPXS(XS_CppStats_new)

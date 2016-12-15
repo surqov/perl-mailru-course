@@ -2,39 +2,33 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
-#include <char*>
-#include <iostream>
 #include "ppport.h"
-#include <map>
 
-using namespace std;
+#include <chromaprint.h>
 
-class CppStat {
-public:
-	map <char*, int> stats;
-	
-	void add (char* name, int val) {
-		if find(!stats.count(name)) {
-			stats.insert(make_pair(name, val));
-		}
-	}
-	void stat (char* name) {
-		return \stats;
-	}
+/* C functions */
 
-	void new (){} 
-}
-MODULE = CppStats		PACKAGE = CppStats		
-void
-CppStat::new();
+MODULE = Audio::Chromaprint		PACKAGE = Audio::Chromaprint
 
-void
-CppStat::DESTROY();
+# XS code
 
-void
-CppStat::add(char* name, double val);
+PROTOTYPES: ENABLED
 
-void
-CppStat::stat(char* name);
+SV *
+new( const char *class )
+    CODE:
+        
+        HV* hash = newHV();
 
+        /* Create a reference to the hash */
+        SV* const self = newRV_noinc( (SV *)hash );
 
+        /* bless into the proper package */
+        RETVAL = sv_bless( self, gv_stashpv( class, 0 ) );
+    OUTPUT: RETVAL
+
+const char *
+version(SV *self)
+    CODE:
+        RETVAL = chromaprint_get_version();
+    OUTPUT: RETVAL
